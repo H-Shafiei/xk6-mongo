@@ -8,6 +8,8 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	
+	"crypto/tls"
 
 	k6modules "go.k6.io/k6/js/modules"
 )
@@ -33,7 +35,9 @@ type Client struct {
 // connURI -> mongodb://username:password@address:port/db?connect=direct
 func (*Mongo) NewClient(connURI string) interface{} {
 	
-	clientOptions := options.Client().ApplyURI(connURI)
+	tlsConfig := new(tls.Config)
+        tlsConfig.InsecureSkipVerify = true
+	clientOptions := options.Client().ApplyURI(connURI).SetTLSConfig(tlsConfig)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		return err
