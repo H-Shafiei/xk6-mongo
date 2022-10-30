@@ -62,7 +62,6 @@ func (c *Client) Find(database string, collection string, filter interface{}) []
 	col := db.Collection(collection)
 
 	
-	log.Print("filter is ", filter)
 	cur, err := col.Find(context.TODO(), filter)
 	if err != nil {
 		log.Fatal(err)
@@ -81,11 +80,9 @@ func (c *Client) FindOne(database string, collection string, filter map[string]s
 	col := db.Collection(collection)
 	var result bson.M
 	opts := options.FindOne().SetSort(bson.D{{"_id", 1}})
-	log.Print("filter is ", filter)
 	err := col.FindOne(context.TODO(), filter, opts).Decode(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("found document %v", result)
 	return nil
 }
